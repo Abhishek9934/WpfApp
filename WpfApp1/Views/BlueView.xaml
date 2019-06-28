@@ -39,8 +39,8 @@
             </Grid.RowDefinitions>
             <TextBlock Text="Images" FontSize="12" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="8,0,0,0"/>
             
-            <Image Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1"/>
-            <Image Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1"/>
+            <Image x:Name="img1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1"/>
+            <Image x:Name="img2" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1"/>
             <Image Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="1"/>
         </Grid>
 
@@ -69,6 +69,7 @@
             </Grid.RowDefinitions>
             <TextBlock Text="3D Model" FontSize="12" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="8,0,0,0"/>
             <Viewport3D Grid.Row="1" Grid.Column="0"/>
+            <Button Click="Button_Click" Content="Button" HorizontalAlignment="Left" Margin="120,96,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75"/>
         </Grid>
 
     </Grid>

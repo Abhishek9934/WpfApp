@@ -9,9 +9,6 @@
         mc:Ignorable="d"
         Title="BioPack v1.0" Height="450" Width="800">
     <Window.Resources>
-        <DataTemplate x:Name="redViewTemplate" DataType="{x:Type viewmodels:RedViewModel}">
-            <views:RedView DataContext="{Binding}"/>
-        </DataTemplate>
         <DataTemplate x:Name="blueViewTemplate" DataType="{x:Type viewmodels:BlueViewModel}">
             <views:BlueView DataContext="{Binding}"/>
         </DataTemplate>
@@ -35,9 +32,7 @@
             <ColumnDefinition Width="159*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid.Background>
-            <ImageBrush  ImageSource="Images/BioPack.JPG"/> 
-        </Grid.Background>
+        
         
         <DockPanel Background="FloralWhite" Grid.Row="1" Grid.Column="0" Grid.RowSpan="4">
             
@@ -49,10 +44,10 @@
                             <VirtualizingStackPanel Orientation="Vertical"/>
                         </ItemsPanelTemplate>
                     </Menu.ItemsPanel>
-                    <MenuItem Header="Plants" Background="FloralWhite"  Click="RedView_Clicked" Height="25" BorderThickness="0.5" Margin="0,0,0,0"/>
-                    <MenuItem Header="Animals" Background="FloralWhite"  Click="RedView_Clicked" Height="25" BorderThickness="0.5"/>
-                    <MenuItem Header="Fungi" Background="FloralWhite"  Click="RedView_Clicked" Height="25" BorderThickness="0.5"/>
-                    <MenuItem Header="Microorganisms" Background="FloralWhite"  Click="RedView_Clicked" Height="25" BorderThickness="0.5"/>
+                    <MenuItem Header="Plants" Background="FloralWhite"  Click="BlueView_Clicked" Height="25" BorderThickness="0.5" Margin="0,0,0,0"/>
+                    <MenuItem Header="Animals" Background="FloralWhite"  Click="BlueView_Clicked" Height="25" BorderThickness="0.5"/>
+                    <MenuItem Header="Fungi" Background="FloralWhite"  Click="BlueView_Clicked" Height="25" BorderThickness="0.5"/>
+                    <MenuItem Header="Microorganisms" Background="FloralWhite"  Click="BlueView_Clicked" Height="25" BorderThickness="0.5"/>
                 </Menu>
                 <TextBlock Text="  Non Living" Height="22" Background="WhiteSmoke" Margin="0,20,0,0"/>
                 <Menu Background="White">
@@ -68,6 +63,7 @@
             </StackPanel>
         </DockPanel>
 
+        <Image Grid.Row="0" Grid.Column="1" Grid.RowSpan="5" Grid.ColumnSpan="4" x:Name="bkg" Source="Images/BioPack.JPG"/>
 
         <DockPanel AllowDrop="True" Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="5">
             <Menu DockPanel.Dock="Top">
@@ -92,9 +88,7 @@
         </DockPanel>
 
 
-
         <ContentControl Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Grid.RowSpan="4" Content="{Binding}"/>
-        <views:BlueView HorizontalAlignment="Left" Height="100" Margin="-231,11,0,0" Grid.Row="2" Grid.RowSpan="2" VerticalAlignment="Top" Width="100"/>
     </Grid>
 
 </Window>
