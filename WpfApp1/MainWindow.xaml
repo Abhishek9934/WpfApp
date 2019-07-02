@@ -8,12 +8,7 @@
         xmlns:views="clr-namespace:WpfApp1.Views"
         mc:Ignorable="d"
         Title="BioPack v1.0" Height="450" Width="800">
-    <Window.Resources>
-        <DataTemplate x:Name="blueViewTemplate" DataType="{x:Type viewmodels:BlueViewModel}">
-            <views:BlueView DataContext="{Binding}"/>
-        </DataTemplate>
-    </Window.Resources>
-
+    
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
         <Grid.RowDefinitions>
@@ -32,8 +27,6 @@
             <ColumnDefinition Width="159*"/>
         </Grid.ColumnDefinitions>
 
-        
-        
         <DockPanel Background="FloralWhite" Grid.Row="1" Grid.Column="0" Grid.RowSpan="4">
             
             <StackPanel>
@@ -63,18 +56,18 @@
             </StackPanel>
         </DockPanel>
 
-        <Image Grid.Row="0" Grid.Column="1" Grid.RowSpan="5" Grid.ColumnSpan="4" x:Name="bkg" Source="Images/BioPack.JPG"/>
 
         <DockPanel AllowDrop="True" Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="5">
             <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_Home" Click="HomeView_Clicked"/>
                 <MenuItem Header="_File">
                     <MenuItem Header="_Open"/>
                     <MenuItem Header="_Print"/>
                     <MenuItem Header="_Close"/>
                 </MenuItem>
                 <MenuItem Header="_Edit">
-                    <MenuItem Header="_Add"/>
-                    <MenuItem Header="_Modify"/>
+                    <MenuItem Header="_Add" Click="Edit_Content"/>
+                    <MenuItem Header="_Modify" Click="Edit_Content"/>
                 </MenuItem>
                 <MenuItem Header="_View">
                     <MenuItem Header="_List"/>

@@ -8,5 +8,12 @@ namespace WpfApp1.ViewModels
 {
     public class BlueViewModel
     {
+        public object header;
+
+        public BlueViewModel(object header)
+        {
+            this.header = header;
+            Console.WriteLine(header);
+        }
     }
 }

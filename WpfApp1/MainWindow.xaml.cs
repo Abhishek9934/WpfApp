@@ -15,7 +15,9 @@ using System.Windows.Navigation;
 using System.Windows.Controls;
 using System.Windows.Shapes;
 using WpfApp1.ViewModels;
+using WpfApp1.Views;
 using System.Net;
+using System.Diagnostics;
 
 namespace WpfApp1
 {
@@ -24,9 +26,11 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
+        List<string> toDelete;
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new HomeView();
         }
 
         byte[] ConvertImageToBinary(System.Drawing.Image img)
@@ -49,8 +53,29 @@ namespace WpfApp1
 
         private void BlueView_Clicked(object sender, RoutedEventArgs e)
         {
-            DataContext = new BlueViewModel();
+            DataContext = new BlueView((sender as MenuItem).Header);
         }
+
+        private void HomeView_Clicked(object sender, RoutedEventArgs e)
+        {
+            DataContext = new HomeView();
+        }
+
+        private void Edit_Content(object sender, RoutedEventArgs e)
+        {
+            Process.Start("explorer.exe","ftp://shivam99:sp99wpfappftp@ftp.drivehq.com/");
+        }
+
 
     }
 }
+/*
+<Window.Resources>
+        <DataTemplate x:Name="blueViewTemplate" DataType="{x:Type viewmodels:BlueViewModel}">
+            <views:BlueView DataContext = "{Binding}" />
+        </ DataTemplate >
+        < DataTemplate x:Name="homeViewTemplate" DataType="{x:Type viewmodels:HomeViewModel}">
+            <views:HomeView DataContext = "{Binding}" />
+        </ DataTemplate >
+    </ Window.Resources >*/
+

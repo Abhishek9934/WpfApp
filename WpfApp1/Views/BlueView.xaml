@@ -25,6 +25,7 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBlock Text="Description" FontSize="12" Grid.Row="0" Grid.Column="0" Margin="8,0,0,0"/>
+            <TextBlock x:Name ="desc" FontSize="12" Grid.Row="1" Grid.Column="0" Margin="8,0,0,0"/>
         </Grid>
 
         <Grid Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="1" Grid.RowSpan="1">
@@ -55,7 +56,7 @@
             </Grid.RowDefinitions>
             <TextBlock Text="Videos" FontSize="12" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="8,0,0,0"/>
 
-            <MediaElement Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Margin="25,25,25,25"/>
+            <MediaElement x:Name ="vid1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Margin="25,25,25,25"/>
             <MediaElement Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Margin="25,25,25,25"/>
         </Grid>
 
@@ -71,6 +72,7 @@
             <Viewport3D Grid.Row="1" Grid.Column="0"/>
             <Button Click="Button_Click" Content="Button" HorizontalAlignment="Left" Margin="120,96,0,0" Grid.Row="1" VerticalAlignment="Top" Width="75"/>
         </Grid>
+        <ListBox x:Name="ListBox" HorizontalAlignment="Left" Height="100" Margin="39,72,0,0" VerticalAlignment="Top" Width="322"/>
 
     </Grid>
 </UserControl>

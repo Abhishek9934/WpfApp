@@ -16,13 +16,18 @@ using System.Windows.Shapes;
 namespace WpfApp1.Views
 {
     /// <summary>
-    /// Interaction logic for RedView.xaml
+    /// Interaction logic for HomeView.xaml
     /// </summary>
-    public partial class RedView : UserControl
+    public partial class HomeView : UserControl
     {
-        public RedView()
+        public HomeView()
         {
             InitializeComponent();
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
