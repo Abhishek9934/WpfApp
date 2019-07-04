@@ -27,33 +27,76 @@ namespace WpfApp1
     public partial class MainWindow : Window
     {
         List<string> toDelete;
+        static string path = "ftp://shivam99:sp99wpfappftp@ftp.drivehq.com/";
         public MainWindow()
         {
             InitializeComponent();
             DataContext = new HomeView();
         }
-
-        byte[] ConvertImageToBinary(System.Drawing.Image img)
+        private List<string> filesListUtil(string filesList)
         {
-            using (MemoryStream ms = new MemoryStream())
+            List<string> ans = new List<string>();
+            string word = "";
+            for (int i = 0; i < filesList.Length; i++)
             {
-                img.Save(ms, System.Drawing.Imaging.ImageFormat.Jpeg);
-                return ms.ToArray();
+                if (filesList[i] == ' ')
+                {
+                    if (word.Length == 5)
+                    {
+                        if (Char.IsDigit(word[0]) && Char.IsDigit(word[1]) && word[2] == ':')
+                        {
+                            word = "";
+                            i++;
+                            while (filesList[i] != '\n')
+                            {
+                                word += filesList[i];
+                                i++;
+                            }
+                            ans.Add(word.Substring(0, word.Length - 1));
+                        }
+                    }
+                    word = "";
+                }
+                else
+                {
+                    word += filesList[i];
+                }
+            }
+            return ans;
+        }
+        private List<string> ListDirectory(string menuItemName,string subMenuItemName = "")
+        {
+            try
+            {
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(path + menuItemName + subMenuItemName);
+                request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
+
+                // This example assumes the FTP site uses anonymous logon.
+                request.Credentials = new NetworkCredential("shivam99", "sp99wpfappftp");
+
+                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
+
+                Stream responseStream = response.GetResponseStream();
+                StreamReader reader = new StreamReader(responseStream);
+                string filesList = reader.ReadToEnd();
+                Console.WriteLine(filesList);
+                List<string> ans = filesListUtil(filesList);
+                Console.WriteLine($"Directory List Complete, status {response.StatusDescription}");
+                reader.Close();
+                response.Close();
+                return ans;
+            }
+            catch (Exception)
+            {
+                return new List<string>();
             }
         }
 
-        System.Drawing.Image ConvertBinaryToImage(byte[] data)
-        {
-            using(MemoryStream ms = new MemoryStream(data))
-            {
-                return System.Drawing.Image.FromStream(ms);
-            }
-        }
 
 
         private void BlueView_Clicked(object sender, RoutedEventArgs e)
         {
-            DataContext = new BlueView((sender as MenuItem).Header);
+            DataContext = new BlueView((string)(sender as MenuItem).Tag,(string)(sender as MenuItem).Header);
         }
 
         private void HomeView_Clicked(object sender, RoutedEventArgs e)
@@ -66,7 +109,22 @@ namespace WpfApp1
             Process.Start("explorer.exe","ftp://shivam99:sp99wpfappftp@ftp.drivehq.com/");
         }
 
+        private void MenuItem_Clicked(object sender, RoutedEventArgs e)
+        {
+            if ((string)(sender as MenuItem).Tag == "unchecked")
+            {
+                List<string> list1 = ListDirectory((string)(sender as System.Windows.Controls.MenuItem).Header);
 
+                for (int i = 0; i < list1.Count; i++)
+                {
+                    MenuItem menuItem = new MenuItem();menuItem.Tag = (sender as MenuItem).Header;
+                    menuItem.Header = list1[i]; menuItem.Click += BlueView_Clicked;
+                    (sender as MenuItem).Items.Add(menuItem);
+
+                }
+                (sender as MenuItem).Tag = "checked";
+            }
+        }
     }
 }
 /*

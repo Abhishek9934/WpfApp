@@ -20,6 +20,7 @@ using System.Windows.Forms;
 using UserControl = System.Windows.Controls.UserControl;
 using Path = System.IO.Path;
 using System.Threading;
+using System.Reflection;
 
 namespace WpfApp1.Views
 {
@@ -29,27 +30,51 @@ namespace WpfApp1.Views
     public partial class BlueView : UserControl
     {
         string menuItemName;
+        string subMenuItemName;
         static string path = "ftp://shivam99:sp99wpfappftp@ftp.drivehq.com/";
         public List<string> toDelete;
-        public BlueView(object header)
+        public BlueView(string s1,string s2)
         {
-            Console.WriteLine(header);
-            menuItemName = (string)header;
+            menuItemName = s1;
+            subMenuItemName = s2;
             toDelete = new List<string>();
             InitializeComponent();
-            img2.Source = getImage();
-            img1.Source = getImage();
+            Console.WriteLine(menuItemName);
+            Console.WriteLine(subMenuItemName);
+            loadView();
+           // downloadFile("Details.txt");
+          
+        }
+   
+        private void loadView()
+        {
+            List<string> imgList = ListDirectory("Images");
+            foreach(string x in imgList)
+            {
+                Console.WriteLine(x);
+            }
+            //string str = "img";
+            //for(int i = 0; i < 4; i++)
+            //{
+            //    char c = (char)(i + 49);
+            //    GetValue(str + c);
+            //}
+            if(imgList.Count>0) img1.Source = getImage(imgList[0]);
+            if (imgList.Count > 1) img2.Source = getImage(imgList[1]);
+            if (imgList.Count > 2) img3.Source = getImage(imgList[2]);
+            if (imgList.Count > 3) img4.Source = getImage(imgList[3]);
+      
         }
         public BlueView()
         {
             InitializeComponent();
         }
 
-        private BitmapImage getImage()
+        private BitmapImage getImage(string fileName)
         {
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://192.168.1.2/Fruit shapes.jpg");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(path + menuItemName + '/' + subMenuItemName + "/Images/"+fileName);
             request.Method = WebRequestMethods.Ftp.DownloadFile;
-            request.Credentials = new NetworkCredential("microfluidics lab", "workstation");
+            request.Credentials = new NetworkCredential("shivam99", "sp99wpfappftp");
             FtpWebResponse response = (FtpWebResponse)request.GetResponse();
             Stream responseStream = response.GetResponseStream();
             BitmapImage bi = new BitmapImage();
@@ -59,9 +84,9 @@ namespace WpfApp1.Views
             return bi;
         }
 
-        private void downloadFile()
+        private void downloadFile(String fileName)
         {
-            FtpWebRequest request = (FtpWebRequest)WebRequest.Create("ftp://shivam99:sp99wpfappftp@ftp.drivehq.com/Text/up1.txt");
+            FtpWebRequest request = (FtpWebRequest)WebRequest.Create(path + menuItemName + '/' + subMenuItemName + "/Text/"+fileName );
             request.Method = WebRequestMethods.Ftp.DownloadFile;
             request.Credentials = new NetworkCredential("shivam99", "sp99wpfappftp");
             FtpWebResponse response = (FtpWebResponse)request.GetResponse();
@@ -114,40 +139,29 @@ namespace WpfApp1.Views
             }
             return null;
         }
-        private void listfiles()
+
+        private List<string> filesListUtil(string filesList)
         {
-            FolderBrowserDialog fbd = new FolderBrowserDialog();
-            if(fbd.ShowDialog() == DialogResult.OK)
-            {
-                ListBox.Items.Clear();
-                string[] files = Directory.GetFiles(fbd.SelectedPath);
-                string[] dirs = Directory.GetDirectories(fbd.SelectedPath);
-
-                foreach (string file in files)
-                {
-                    ListBox.Items.Add(Path.GetFileName(file));
-                }
-                foreach (string dir in dirs)
-                {
-                    ListBox.Items.Add(Path.GetFileName(dir));
-                }
-
-            }
-        }
-
-        private void filesListUtil(string filesList)
-        {
-            //List<string>
+            List<string> ans = new List<string>();
             string word="";
             for(int i = 0; i < filesList.Length; i++)
             {
-                if (filesList[i] == '\n')
+                if (filesList[i] == ' ')
                 {
-                    Console.WriteLine(word);
-                    word = "";
-                }
-                else if (filesList[i] == ' ')
-                {
+                    if (word.Length == 5)
+                    {
+                        if (Char.IsDigit(word[0]) && Char.IsDigit(word[1]) && word[2] == ':')
+                        {
+                            word = "";
+                            i++;
+                            while (filesList[i] != '\n')
+                            {
+                                word += filesList[i];
+                                i++;
+                            }
+                            ans.Add(word.Substring(0,word.Length-1));
+                        }
+                    }
                     word = "";
                 }
                 else
@@ -155,12 +169,13 @@ namespace WpfApp1.Views
                     word += filesList[i];
                 }
             }
+            return ans;
         }
-        private void ListDirectory()
+        private List<string> ListDirectory(string str="")
         {
             try
             {
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(path+menuItemName+"/1. Coconut");
+                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(path + menuItemName + '/' + subMenuItemName +'/' + str);
                 request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
 
                 // This example assumes the FTP site uses anonymous logon.
@@ -171,15 +186,15 @@ namespace WpfApp1.Views
                 Stream responseStream = response.GetResponseStream();
                 StreamReader reader = new StreamReader(responseStream);
                 string filesList = reader.ReadToEnd();
-                Console.WriteLine(filesList);
-                filesListUtil(filesList);
+                List<string> ans = filesListUtil(filesList);
                 Console.WriteLine($"Directory List Complete, status {response.StatusDescription}");
-
                 reader.Close();
                 response.Close();
+                return ans;
             }
             catch (Exception)
             {
+                return new List<string>();
             }
         }
 
@@ -237,12 +252,13 @@ namespace WpfApp1.Views
         {
        //downloadFile();
           //listfiles();
-            ListDirectory();
+            ListDirectory("/1. Coconut");
             //readFromDoc();
             /*uploadFile();
             //deleteFile();
             var myValue = (sender as Button).Content;
             Console.WriteLine(myValue);*/
         }
+
     }
 }

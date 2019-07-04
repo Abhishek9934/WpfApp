@@ -8,7 +8,7 @@
         xmlns:views="clr-namespace:WpfApp1.Views"
         mc:Ignorable="d"
         Title="BioPack v1.0" Height="450" Width="800">
-    
+
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
         <Grid.RowDefinitions>
@@ -23,12 +23,12 @@
             <ColumnDefinition Width="139*"/>
             <ColumnDefinition Width="178*"/>
             <ColumnDefinition Width="159*"/>
-            <ColumnDefinition Width="158*"/>
+            <ColumnDefinition Width="157*"/>
             <ColumnDefinition Width="159*"/>
         </Grid.ColumnDefinitions>
 
         <DockPanel Background="FloralWhite" Grid.Row="1" Grid.Column="0" Grid.RowSpan="4">
-            
+
             <StackPanel>
                 <TextBlock Text="  Living" Height="22" Background="WhiteSmoke" Margin="0,0,0,0"/>
                 <Menu Background="FloralWhite">
@@ -37,7 +37,7 @@
                             <VirtualizingStackPanel Orientation="Vertical"/>
                         </ItemsPanelTemplate>
                     </Menu.ItemsPanel>
-                    <MenuItem Header="Plants" Background="FloralWhite"  Click="BlueView_Clicked" Height="25" BorderThickness="0.5" Margin="0,0,0,0"/>
+                    <MenuItem Header="Plants" Tag="unchecked" Background="FloralWhite"  Click="MenuItem_Clicked" Height="25" BorderThickness="0.5" Margin="0,0,0,0"/>
                     <MenuItem Header="Animals" Background="FloralWhite"  Click="BlueView_Clicked" Height="25" BorderThickness="0.5"/>
                     <MenuItem Header="Fungi" Background="FloralWhite"  Click="BlueView_Clicked" Height="25" BorderThickness="0.5"/>
                     <MenuItem Header="Microorganisms" Background="FloralWhite"  Click="BlueView_Clicked" Height="25" BorderThickness="0.5"/>
