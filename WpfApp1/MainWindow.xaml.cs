@@ -87,36 +87,6 @@ namespace WpfApp1
             return ans;
         }
 
-        private List<string> ListDirectory(string menuItemName,string subMenuItemName = "")
-        {
-            try
-            {
-                FtpWebRequest request = (FtpWebRequest)WebRequest.Create(path + menuItemName + subMenuItemName);
-                request.Method = WebRequestMethods.Ftp.ListDirectoryDetails;
-
-                // This example assumes the FTP site uses anonymous logon.
-                request.Credentials = new NetworkCredential("shivam99", "sp99wpfappftp");
-
-                FtpWebResponse response = (FtpWebResponse)request.GetResponse();
-
-                Stream responseStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(responseStream);
-                string filesList = reader.ReadToEnd();
-                Console.WriteLine(filesList);
-                List<string> ans = filesListUtil(filesList);
-                Console.WriteLine($"Directory List Complete, status {response.StatusDescription}");
-                reader.Close();
-                response.Close();
-                return ans;
-            }
-            catch (Exception)
-            {
-                return new List<string>();
-            }
-        }
-
-
-
         private void BlueView_Clicked(object sender, RoutedEventArgs e)
         {
             pb1.Minimum = 0;
@@ -137,8 +107,13 @@ namespace WpfApp1
         private void Edit_Content(object sender, RoutedEventArgs e)
         {
 
-            System.Diagnostics.Process.Start("https://drive.google.com/drive/my-drive");
+           
             var wait = System.Windows.Forms.MessageBox.Show("Login to upload/edit");
+            System.Diagnostics.Process.Start("https://drive.google.com/drive/my-drive");
+        }
+        private void Open_Content(object sender, RoutedEventArgs e){
+            var wait = System.Windows.Forms.MessageBox.Show("Login to open file");
+            System.Diagnostics.Process.Start("https://drive.google.com/drive/my-drive");
         }
 
         private void MenuItem_Clicked(object sender, RoutedEventArgs e)
@@ -319,6 +294,10 @@ namespace WpfApp1
                 stream.WriteTo(file);
                 Console.WriteLine("File Downloaded successfully.");
             }
+        }
+        private void Close_Clicked(object sender, RoutedEventArgs e)
+        {
+            this.Close();
         }
     }
 }

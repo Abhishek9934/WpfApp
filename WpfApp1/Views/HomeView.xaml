@@ -7,9 +7,27 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <Image x:Name="bkg" Source="/WpfApp1;component/Images/BioPack.JPG" />
-        <TextBox HorizontalAlignment="Center"  TextWrapping="Wrap" VerticalAlignment="Top" Width="170" Margin="315,18,315,0" RenderTransformOrigin="0.476,1.667"/>
-        <Button Content="Search" HorizontalAlignment="Left" Margin="506,18,0,0" VerticalAlignment="Top" Width="75" RenderTransformOrigin="0.413,0.85" Height="18" Click="Button_Click"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="25"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Image Grid.Row="0" Grid.RowSpan="3"  Grid.Column="0" Grid.ColumnSpan="3" x:Name="bkg" Source="/WpfApp1;component/Images/BioPack.JPG" />
+        <TextBox x:Name="textBox" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" TextWrapping="Wrap" Width="180" Height="20" VerticalAlignment="Top" BorderThickness="2" />
+        <Button Content="Search" Click="Search_Click" Grid.Row="1" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Height="20"/>
+
+        <Menu x:Name="searchMenu" Grid.RowSpan="2"  Grid.Column="1" Grid.Row="1" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,20,0,0" Width="Auto">
+            <Menu.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <VirtualizingStackPanel Orientation="Vertical"/>
+                </ItemsPanelTemplate>
+            </Menu.ItemsPanel>
+        </Menu>
 
     </Grid>
 </UserControl>

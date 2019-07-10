@@ -24,9 +24,14 @@
                 <RowDefinition Height="18"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
+
             <TextBlock Text="Description" FontSize="12" Grid.Row="0" Grid.Column="0" Margin="8,0,0,0"/>
-            <ScrollViewer MaxHeight=" 500" Width="Auto" Grid.Row="1" Grid.Column="0">
-                <TextBox IsReadOnly="True" x:Name ="desc" TextWrapping="Wrap" TextAlignment="Justify" Padding="20" FontSize="12" Grid.Row="1" Grid.Column="0" Margin="8,0,0,0"/>
+
+            <ScrollViewer MaxHeight="500"  
+              Width="Auto"  Grid.Row="1" Grid.Column="0" 
+             
+              VerticalScrollBarVisibility="Auto">
+                <TextBlock x:Name ="desc" TextWrapping ="Wrap" TextAlignment="Justify" FontSize="12" Grid.Row="1" Grid.Column="0" Margin="8,0,0,0" Padding="20" />
             </ScrollViewer>
         </Grid>
 
@@ -38,29 +43,47 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="18"/>
                 <RowDefinition/>
+                <RowDefinition Height="20"/>
                 <RowDefinition/>
+                <RowDefinition Height="25" />
+
             </Grid.RowDefinitions>
             <TextBlock Text="Images" FontSize="12" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="8,0,0,0"/>
-            
+            <Menu x:Name ="imagesMenu" Grid.Row="1" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,10,10,10">
+                <Menu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </Menu.ItemsPanel>
+         
+
+            </Menu>
             <Image x:Name="img1" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1"/>
-            <Image x:Name="img2" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Grid.RowSpan="1"/>
-            <Image x:Name="img3" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1"/>
-            <Image x:Name="img4" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="1" Grid.RowSpan="1"/>
+            <Image x:Name="img2" Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Grid.RowSpan="1" />
+            <Image x:Name="img3" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1" />
+            <Image x:Name="img4" Grid.Row="3" Grid.Column="1" Grid.ColumnSpan="1" Grid.RowSpan="1" />
+            <TextBlock x:Name="txt1" Grid.Row="2" Grid.Column="0" />
+            <TextBlock x:Name="txt2" Grid.Row="2" Grid.Column="1"/>
+            <TextBlock x:Name="txt3" Grid.Row="4" Grid.Column="0"/>
+            <TextBlock x:Name="txt4" Grid.Row="4" Grid.Column="1"/>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="1" Grid.RowSpan="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
-                <ColumnDefinition/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="18"/> 
+                <RowDefinition Height="18"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBlock Text="Videos" FontSize="12" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Margin="8,0,0,0"/>
-            <WebBrowser x:Name ="webBrowser1" Grid.ColumnSpan="2" Grid.RowSpan="1" Grid.Row="1" VerticalAlignment="Top" />
-
-
+            <Menu x:Name ="vlMenu" Grid.Row="1" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="1"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,10,10,10">
+                <Menu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </Menu.ItemsPanel>
+            </Menu>
         </Grid>
 
         <Grid Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="1" Grid.RowSpan="1">
@@ -70,8 +93,12 @@
             <Grid.RowDefinitions>
                 <RowDefinition Height="18"/>
                 <RowDefinition/>
+
             </Grid.RowDefinitions>
+
+
         </Grid>
+       
 
     </Grid>
 </UserControl>

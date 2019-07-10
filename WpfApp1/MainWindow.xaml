@@ -49,9 +49,9 @@
                             <VirtualizingStackPanel Orientation="Vertical"/>
                         </ItemsPanelTemplate>
                     </Menu.ItemsPanel>
-                    <MenuItem Header="On Land" Background="FloralWhite" Click="BlueView_Clicked" Height="25" BorderThickness="0.5"  Margin="0,0,0,0"/>
-                    <MenuItem Header="In Water" Background="FloralWhite" Click="BlueView_Clicked" Height="25" BorderThickness="0.5"/>
-                    <MenuItem Header="In Air" Background="FloralWhite" Click="BlueView_Clicked" Height="25" BorderThickness="0.5"/>
+                    <MenuItem Header="On Land" Tag="unchecked" Background="FloralWhite"  Click="MenuItem_Clicked" Height="25" BorderThickness="0.5"  Margin="0,0,0,0"/>
+                    <MenuItem Header="In Water" Tag="unchecked" Background="FloralWhite"  Click="MenuItem_Clicked" Height="25" BorderThickness="0.5"/>
+                    <MenuItem Header="In Air"  Tag="unchecked" Background="FloralWhite"  Click="MenuItem_Clicked" Height="25" BorderThickness="0.5"/>
                 </Menu>
             </StackPanel>
         </DockPanel>
@@ -61,9 +61,9 @@
             <Menu DockPanel.Dock="Top">
                 <MenuItem Header="_Home" Click="HomeView_Clicked"/>
                 <MenuItem Header="_File">
-                    <MenuItem Header="_Open"/>
+                    <MenuItem Header="_Open" Click="Open_Content"/>
                     <MenuItem Header="_Print"/>
-                    <MenuItem Header="_Close"/>
+                    <MenuItem Header="_Close" Click="Close_Clicked"/>
                 </MenuItem>
                 <MenuItem Header="_Edit">
                     <MenuItem Header="_Add" Click="Edit_Content"/>
