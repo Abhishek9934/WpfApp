@@ -31,27 +31,66 @@ namespace WpfApp1.Views
     
     public partial class HomeView : UserControl
     {
-        static string[] Scopes = { DriveService.Scope.Drive };
+        static string[] Scopes = { DriveService.Scope.Drive };                           //Scopes for use with the Google Drive API
         static string ApplicationName = "Drive API .NET SummerProject";
+        static DriveService service;
+        static string path = @"C:\BioPack\";
 
-        public Action<object, RoutedEventArgs> AcceptButton { get; }
 
         public HomeView()
         {
-            InitializeComponent(); 
+            InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void open_View(object sender, RoutedEventArgs e)
         {
+           
 
         }
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        private static string getID(string str)
+        { // Define parameters of request.
+            FilesResource.ListRequest listRequest = service.Files.List();
+            listRequest.Fields = "nextPageToken, files(id, name, owners, parents,mimeType)";
+            string temp = "name = \'" + str + "\'";
+            Console.WriteLine(temp);
+            listRequest.Q = temp;
+            var request = listRequest.Execute();
+            if (request.Files[0].MimeType == "application/vnd.google-apps.folder")
+            {
+                Console.WriteLine("reached here");
+                return null;
+            }
+            return request.Files[0].Id;
+        }
+
+        private void saveFile(object sender, RoutedEventArgs e)                                     // save file to  C drive of the computer
         {
+            string fileID = getID((string)(sender as MenuItem).Header);
+            if(fileID == null)
+            {
+                return;
+            }
+            string fileName = (string)(sender as MenuItem).Header;
+            if (System.IO.File.Exists(path + fileName))
+            {
+                System.Diagnostics.Process.Start(path + (sender as MenuItem).Header);
+                return;
+            }
 
+            var request = service.Files.Get(fileID);
+            var stream = new System.IO.MemoryStream();
+            request.Download(stream);
+            stream.Seek(0, System.IO.SeekOrigin.Begin);
+            using (Stream fileStream = System.IO.File.Create(path + fileName))
+            {
+                stream.CopyTo(fileStream);
+            }
+            Console.WriteLine(path + fileName);
+            System.Diagnostics.Process.Start(path + (sender as MenuItem).Header);
         }
 
-        private static UserCredential GetCredentials()
+        private static UserCredential GetCredentials()                                                                 //function for getting credentials
         {
             UserCredential credential;
 
@@ -72,31 +111,39 @@ namespace WpfApp1.Views
 
             return credential;
         }
- 
-        private void Search_Click(object sender, RoutedEventArgs e)
+
+        private void textBox_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                Search_Click(this, new RoutedEventArgs());
+            }
+        }
+
+        private void Search_Click(object sender, RoutedEventArgs e)                          // function to initiate search on clicking the search button
         {
             string[] Scopes = { DriveService.Scope.Drive };
             string ApplicationName = "Drive API .NET SummerProject";
             UserCredential credential;
-
+            // here is where we Request the user to give us access 
             credential = GetCredentials();
-            DriveService service = new DriveService(new BaseClientService.Initializer()
+            service = new DriveService(new BaseClientService.Initializer()
             {
                 HttpClientInitializer = credential,
                 ApplicationName = ApplicationName,
             });
             searchMenu.Items.Clear(); 
-            searchQuery(service, textBox.Text);
+            searchQuery(textBox.Text);                                             //calling the function for search by passing the text entered in the search box 
         }
 
-        private void searchQuery(DriveService service,string str)
+        private void searchQuery(string str)                                 
         {
-            FilesResource.ListRequest listRequest = service.Files.List();
+            FilesResource.ListRequest listRequest = service.Files.List();                   //Constructs a new List request
             listRequest.Fields = "nextPageToken, files(id, name, owners, parents,mimeType)";
-            string temp = "fullText contains \'" + str + "\'";
-            listRequest.Q = temp;
+            string temp = "fullText contains \'" + str + "\'";                                              
+            listRequest.Q = temp;                                                           //search  query            
             var request = listRequest.Execute();
-            if (request.Files != null && request.Files.Count > 0)
+            if (request.Files != null && request.Files.Count > 0) 
             {
                 foreach (var file in request.Files)
                 {
@@ -104,8 +151,8 @@ namespace WpfApp1.Views
                     MenuItem menuItem = new MenuItem();
                     menuItem.Header = file.Name;
                     menuItem.Height = 20;
-                    //menuItem.Click += videoPlayer;
-                    searchMenu.Items.Add(menuItem);
+                    menuItem.Click += saveFile;
+                    searchMenu.Items.Add(menuItem);                                        // Add items to menu
                 }
 
             }

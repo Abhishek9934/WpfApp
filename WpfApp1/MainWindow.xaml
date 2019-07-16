@@ -62,25 +62,28 @@
                 <MenuItem Header="_Home" Click="HomeView_Clicked"/>
                 <MenuItem Header="_File">
                     <MenuItem Header="_Open" Click="Open_Content"/>
-                    <MenuItem Header="_Print"/>
+                    <MenuItem Header="_Print" Click="Print_Clicked"/>
                     <MenuItem Header="_Close" Click="Close_Clicked"/>
                 </MenuItem>
                 <MenuItem Header="_Edit">
                     <MenuItem Header="_Add" Click="Edit_Content"/>
                     <MenuItem Header="_Modify" Click="Edit_Content"/>
                 </MenuItem>
-                <MenuItem Header="_View">
-                    <MenuItem Header="_List"/>
+                <MenuItem Header="_View" Click ="list_Clicked">
+                   
                 </MenuItem>
+                <MenuItem Header="_Feedback" Click="Feedback_content"/>
                 <MenuItem Header="_Help">
-                    <MenuItem Header="_Feedback"/>
-                    <MenuItem Header="_Document"/>
+                   
+                    <MenuItem Header="_About" Click="About_Clicked"/>
                 </MenuItem>
                 <ProgressBar x:Name ="pb1"  Height="10" Width="500"/>
             </Menu>
             <StackPanel></StackPanel>
         </DockPanel>
-
+       
+         
+        
 
         <ContentControl Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="4" Grid.RowSpan="4" Content="{Binding}"/>
     </Grid>

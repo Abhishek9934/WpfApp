@@ -39,7 +39,9 @@ namespace WpfApp1.Views
         static string folderID;
         static DriveService service;
 
-        List<Google.Apis.Drive.v3.Data.File> vidList;
+        List<Google.Apis.Drive.v3.Data.File> vidList;        //list for storing video files
+        List<Google.Apis.Drive.v3.Data.File> imgList;        // list for storing image files
+        static string path = @"C:\BioPack\";
 
         public BlueView()
         {
@@ -49,21 +51,26 @@ namespace WpfApp1.Views
         public BlueView(string s1,DriveService ds)
         {
             folderID = s1;
-            //Console.WriteLine("FolderId = "+s1);
             InitializeComponent();
             service = ds;
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
             loadView();
-            //webBrowser1.Navigate(new Uri("https://www.youtube.com/"));
         }
    
-        private void loadView()
+        private void loadView()                                                                 // Function for loading images ,videos and text in the blue view
         {
             List<Google.Apis.Drive.v3.Data.File> ls = FolderContent(folderID);
             foreach (Google.Apis.Drive.v3.Data.File x in ls)
             {
-                if(x.Name == "Images")
+                if(x.Name == "Images")                                                          // for displaying images
                 {
-                    List<Google.Apis.Drive.v3.Data.File> imgList = FolderContent(x.Id);
+                    imgList = FolderContent(x.Id);
+                    downloadImages();
+                    Thread thread1 = new Thread(new ThreadStart(downloadImages));
+                    thread1.Start();
                     if (imgList.Count > 0)
                     {
                         
@@ -73,42 +80,20 @@ namespace WpfApp1.Views
                             {
                                 MenuItem menuItem = new MenuItem();
                                 menuItem.Header = f.Name;
-                                menuItem.Click += imagePlayer;
+                                menuItem.Click += filePlayer;
                                 imagesMenu.Items.Add(menuItem);
                             }
-                           // img1.Source = getImage(imgList[0].Id); txt1.Text=service.Files.Get(imgList[0].Id).Execute().Name;
                         });
                     }
-                /*    if (imgList.Count > 1)
-                    {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            img2.Source = getImage(imgList[1].Id); txt2.Text = service.Files.Get(imgList[1].Id).Execute().Name;
-                        });
-                    }
-                    if (imgList.Count > 2)
-                    {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            img3.Source = getImage(imgList[2].Id); txt3.Text = service.Files.Get(imgList[2].Id).Execute().Name;
-                        });
-                    }
-                    if (imgList.Count > 3)
-                    {
-                        this.Dispatcher.Invoke(() =>
-                        {
-                            img4.Source = getImage(imgList[3].Id); txt4.Text = service.Files.Get(imgList[3].Id).Execute().Name;
-                        });
-                    }*/
                 }
-
-                if (x.Name == "Text")
+                                    
+                if (x.Name == "Text")                                                           // for displaying text
                 {
                     List<Google.Apis.Drive.v3.Data.File> descList = FolderContent(x.Id);
                     if(descList.Count>0)desc.Text = getText(descList[0].Id);
                 }
 
-                if(x.Name == "Videos")
+                if(x.Name == "Videos")                                                          // for displaying videos
                 {
                     vidList = FolderContent(x.Id);
                     Thread thread = new Thread(new ThreadStart(downloadVideos));
@@ -117,44 +102,54 @@ namespace WpfApp1.Views
                     {
                         MenuItem menuItem = new MenuItem();
                         menuItem.Header = f.Name;
-                        menuItem.Click += videoPlayer;
+                        menuItem.Click += filePlayer;
                         vlMenu.Items.Add(menuItem);
                     }
                 }
             }
         }
-        private void imagePlayer(object sender, RoutedEventArgs e)
+        private void filePlayer(object sender, RoutedEventArgs e)               
         {
-            Process.Start("photoviewer.exe", "F:\\" + (sender as MenuItem).Header);
+            System.Diagnostics.Process.Start(path + (sender as MenuItem).Header);                 // display image
 
         }
         private void downloadVideos()
         {
             foreach (Google.Apis.Drive.v3.Data.File f in vidList)
             {
-                getVideo(f);
+                saveFile(f);
             }
         }
 
-        private void videoPlayer(object sender, RoutedEventArgs e)
+        private void downloadImages()                                                           
         {
-            Process.Start("explorer.exe", "F:\\" + (sender as MenuItem).Header);
+            foreach (Google.Apis.Drive.v3.Data.File f in imgList)                                     
+            {
+                saveFile(f);
+            }
         }
-        private void getVideo(Google.Apis.Drive.v3.Data.File file)
+         
+
+        private void saveFile(Google.Apis.Drive.v3.Data.File file)                                     // save file to  C drive of the computer
         {
             string fileID = file.Id, fileName = file.Name;
+            if (System.IO.File.Exists(path+ fileName))
+            {
+                return;
+            }
             var request = service.Files.Get(fileID);
             var stream = new System.IO.MemoryStream();
             request.Download(stream);
             stream.Seek(0, System.IO.SeekOrigin.Begin);
-            using (Stream fileStream = System.IO.File.Create(@"F:\"+fileName))
+            using (Stream fileStream = System.IO.File.Create(path+fileName))
             {
                 stream.CopyTo(fileStream);
             }
-            Console.WriteLine("F:/" + fileName);
+            Console.WriteLine(path + fileName);
         }
+        
 
-        private string getText(string fileID)
+        private string getText(string fileID)                                                           //function to read text file from the drive
         {
             var request = service.Files.Get(fileID);
 
@@ -182,7 +177,7 @@ namespace WpfApp1.Views
             return bitmap;
         }
 
-        private static List<Google.Apis.Drive.v3.Data.File> FolderContent(string folderID)
+        private static List<Google.Apis.Drive.v3.Data.File> FolderContent(string folderID)              // To list all the files from the drive 
         {
             // Define parameters of request.
             List<Google.Apis.Drive.v3.Data.File> ans = new List<Google.Apis.Drive.v3.Data.File>();
@@ -192,7 +187,7 @@ namespace WpfApp1.Views
             listRequest.Q = temp;
 
             var request = listRequest.Execute();
-            if (request.Files != null && request.Files.Count > 0)
+            if (request.Files != null && request.Files.Count > 0)                    
             {
                 foreach (var file in request.Files)
                 {

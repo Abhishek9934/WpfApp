@@ -34,11 +34,12 @@ namespace WpfApp1
     /// </summary>
     public partial class MainWindow : Window
     {
-
+      
         static string[] Scopes = { DriveService.Scope.Drive };
         static string ApplicationName = "Drive API .NET SummerProject";
-        static string path = "ftp://shivam99:sp99wpfappftp@ftp.drivehq.com/";
         static DriveService service;
+
+        public string MyApplicationName { get; private set; }
 
         public MainWindow()
         {
@@ -46,7 +47,12 @@ namespace WpfApp1
 
             credential = GetCredentials();
             InitializeComponent();
-            DataContext = new HomeView();
+          
+                DataContext = new HomeView();
+#if DEBUG
+            System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
+#endif
+
             //Main1();
             service = new DriveService(new BaseClientService.Initializer()
             {
@@ -89,31 +95,32 @@ namespace WpfApp1
 
         private void BlueView_Clicked(object sender, RoutedEventArgs e)
         {
-            pb1.Minimum = 0;
-            pb1.Maximum = 200;
-
-            for (int i = 0; i <= 200; i++)
-            {
-                pb1.Value = i;
-            }
             DataContext = new BlueView(getID((string)(sender as MenuItem).Header),service);
+        }
+
+        private void Print_Clicked(object sender, RoutedEventArgs e)
+        {
+           
         }
 
         private void HomeView_Clicked(object sender, RoutedEventArgs e)
         {
-            DataContext = new HomeView();
+            DataContext = new HomeView();                                                                //load the home view
         }
 
         private void Edit_Content(object sender, RoutedEventArgs e)
         {
-
-           
             var wait = System.Windows.Forms.MessageBox.Show("Login to upload/edit");
-            System.Diagnostics.Process.Start("https://drive.google.com/drive/my-drive");
+            System.Diagnostics.Process.Start("https://drive.google.com/drive/my-drive");                  //open the drive       
         }
-        private void Open_Content(object sender, RoutedEventArgs e){
+        private void Open_Content(object sender, RoutedEventArgs e){                  
             var wait = System.Windows.Forms.MessageBox.Show("Login to open file");
-            System.Diagnostics.Process.Start("https://drive.google.com/drive/my-drive");
+            System.Diagnostics.Process.Start("https://drive.google.com/drive/my-drive");                 //open the drive       
+        }
+        private void Feedback_content(object sender, RoutedEventArgs e)                                
+        {
+            System.Diagnostics.Process.Start("https://docs.google.com/forms/d/e/1FAIpQLSdUPYRPHhvGDXGasUk1Xb1ztOe2kz1yH72lklx3Bkt-QJTaYw/viewform?usp=sf_link");                //load the feedback form
+
         }
 
         private void MenuItem_Clicked(object sender, RoutedEventArgs e)
@@ -137,7 +144,7 @@ namespace WpfApp1
         }
 
         private static string getID(string str)
-        {
+        { // Define parameters of request.
             FilesResource.ListRequest listRequest = service.Files.List();
             listRequest.Fields = "nextPageToken, files(id, name, owners, parents,mimeType)";
             string temp = "name = \'" + str + "\'";
@@ -174,7 +181,7 @@ namespace WpfApp1
         }
 
 
-        private static void ListFiles(DriveService service)
+        private void ListFiles(DriveService service)
         {
             // Define parameters of request.
             FilesResource.ListRequest listRequest = service.Files.List();
@@ -190,20 +197,15 @@ namespace WpfApp1
                 foreach (var file in request.Files)
                 {
                     Console.WriteLine("{0}", file.Name);
-
-                    if (file.Parents.Count > 0) foreach (string x in file.Parents)
-                        {
-                            Console.Write(x + " ");
-                        }
-                    Console.WriteLine();
                 }
-
+              
             }
             else
             {
                 Console.WriteLine("No files found.");
 
             }
+       
         }
 
         private static void UploadFile(string path, DriveService service, string mType)
@@ -225,7 +227,7 @@ namespace WpfApp1
 
         }
 
-        private static UserCredential GetCredentials()
+        private static UserCredential GetCredentials()                         // to get credentials
         {
             UserCredential credential;
 
@@ -295,11 +297,28 @@ namespace WpfApp1
                 Console.WriteLine("File Downloaded successfully.");
             }
         }
-        private void Close_Clicked(object sender, RoutedEventArgs e)
+
+        private void Close_Clicked(object sender, RoutedEventArgs e)                    // close app
         {
             this.Close();
         }
+
+        private void list_Clicked(object sender, RoutedEventArgs e)  
+        {
+            DataContext = new WpfApp1.Views.ListView(service);                                // open the list view
+        
+        }
+
+        private void About_Clicked(object sender, RoutedEventArgs e)
+        {
+            DataContext = new WpfApp1.Views.AboutView(getID((string)(sender as MenuItem).Header), service);
+
+        }
+
     }
+    
 }
+
+//pass = rNd8L7YV
 
 // MimeTypes: "images/jpeg", "text/plain", "application/pdf", "application/vnd.google-apps.folder", "video/mp4", "audio/mpeg" , "image/png"

@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace WpfApp1.ViewModels
 {
-    public class RedViewModel
+    class ListViewModel
     {
+
     }
 }
