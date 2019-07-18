@@ -65,7 +65,7 @@ namespace WpfApp1.Views
             List<Google.Apis.Drive.v3.Data.File> ls = FolderContent(folderID);
             foreach (Google.Apis.Drive.v3.Data.File x in ls)
             {
-                if(x.Name == "Images")                                                          // for displaying images
+                if(x.Name == "Images" || x.Name == "Image")                                                          // for displaying images
                 {
                     imgList = FolderContent(x.Id);
                     downloadImages();
@@ -93,7 +93,7 @@ namespace WpfApp1.Views
                     if(descList.Count>0)desc.Text = getText(descList[0].Id);
                 }
 
-                if(x.Name == "Videos")                                                          // for displaying videos
+                if(x.Name == "Videos" || x.Name == "Video")                                                          // for displaying videos
                 {
                     vidList = FolderContent(x.Id);
                     Thread thread = new Thread(new ThreadStart(downloadVideos));
@@ -110,7 +110,11 @@ namespace WpfApp1.Views
         }
         private void filePlayer(object sender, RoutedEventArgs e)               
         {
-            System.Diagnostics.Process.Start(path + (sender as MenuItem).Header);                 // display image
+            try
+            {
+                System.Diagnostics.Process.Start(path + (sender as MenuItem).Header);                 // display image
+            }
+            catch (Exception) { }
 
         }
         private void downloadVideos()
@@ -145,7 +149,7 @@ namespace WpfApp1.Views
             {
                 stream.CopyTo(fileStream);
             }
-            Console.WriteLine(path + fileName);
+           // Console.WriteLine(path + fileName);
         }
         
 
@@ -199,57 +203,6 @@ namespace WpfApp1.Views
                 Console.WriteLine("No files found.");
             }
             return ans;
-        }
-
-        private static void ListFiles(DriveService service)
-        {
-            // Define parameters of request.
-            FilesResource.ListRequest listRequest = service.Files.List();
-            listRequest.Fields = "nextPageToken, files(id, name, owners, parents,mimeType)";
-            //listRequest.Q = "mimeType='image/jpeg'";
-
-            // List files.
-            var request = listRequest.Execute();
-
-
-            if (request.Files != null && request.Files.Count > 0)
-            {
-                foreach (var file in request.Files)
-                {
-                    Console.WriteLine("{0}", file.Name);
-
-                    if (file.Parents.Count > 0) foreach (string x in file.Parents)
-                        {
-                            Console.Write(x + " ");
-                        }
-                    Console.WriteLine();
-                }
-
-            }
-            else
-            {
-                Console.WriteLine("No files found.");
-            }
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            FilesResource.ListRequest listRequest = service.Files.List();
-            listRequest.Fields = "nextPageToken, files(id, name, owners, parents,mimeType)";
-            listRequest.Q = "fullText contains 'husk'";
-            var request = listRequest.Execute();
-            if (request.Files != null && request.Files.Count > 0)
-            {
-                foreach (var file in request.Files)
-                {
-                    Console.WriteLine("{0}", file.Name);
-                }
-
-            }
-            else
-            {
-                Console.WriteLine("No files found.");
-            }
         }
        
     }

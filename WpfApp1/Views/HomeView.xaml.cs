@@ -32,7 +32,6 @@ namespace WpfApp1.Views
     public partial class HomeView : UserControl
     {
         static string[] Scopes = { DriveService.Scope.Drive };                           //Scopes for use with the Google Drive API
-        static string ApplicationName = "Drive API .NET SummerProject";
         static DriveService service;
         static string path = @"C:\BioPack\";
 
@@ -53,12 +52,12 @@ namespace WpfApp1.Views
             FilesResource.ListRequest listRequest = service.Files.List();
             listRequest.Fields = "nextPageToken, files(id, name, owners, parents,mimeType)";
             string temp = "name = \'" + str + "\'";
-            Console.WriteLine(temp);
+            //Console.WriteLine(temp);
             listRequest.Q = temp;
             var request = listRequest.Execute();
             if (request.Files[0].MimeType == "application/vnd.google-apps.folder")
             {
-                Console.WriteLine("reached here");
+                //Console.WriteLine("reached here");
                 return null;
             }
             return request.Files[0].Id;
@@ -86,7 +85,7 @@ namespace WpfApp1.Views
             {
                 stream.CopyTo(fileStream);
             }
-            Console.WriteLine(path + fileName);
+            //Console.WriteLine(path + fileName);
             System.Diagnostics.Process.Start(path + (sender as MenuItem).Header);
         }
 
@@ -147,7 +146,7 @@ namespace WpfApp1.Views
             {
                 foreach (var file in request.Files)
                 {
-                    Console.WriteLine("{0}", file.Name);
+                    //Console.WriteLine("{0}", file.Name);
                     MenuItem menuItem = new MenuItem();
                     menuItem.Header = file.Name;
                     menuItem.Height = 20;

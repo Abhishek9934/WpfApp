@@ -34,8 +34,6 @@ namespace WpfApp1.Views
     public partial class ListView : UserControl
     {
         static string[] Scopes = { DriveService.Scope.Drive };                                //Scopes for use with the Google Drive API
-        static string ApplicationName = "Drive API .NET SummerProject";
-        static string path = @"C:\BioPack\";
 
         static DriveService service;
         public ListView(DriveService ds)
@@ -81,7 +79,7 @@ namespace WpfApp1.Views
             FilesResource.ListRequest listRequest = service.Files.List();
             listRequest.Fields = "nextPageToken, files(id, name, owners, parents,mimeType)";
             string temp = "name = \'" + str + "\'";
-            Console.WriteLine(temp);
+           // Console.WriteLine(temp);
             listRequest.Q = temp;
             var request = listRequest.Execute();
             return request.Files[0].Id;
@@ -127,7 +125,7 @@ namespace WpfApp1.Views
             if (request.Files != null && request.Files.Count > 0)
             {
                 foreach (var file in request.Files)
-                {  
+                {
                     if (file.Name == "Plants" || file.Name == "Animals" || file.Name == "Fungi" || file.Name == "Microorganisms" || file.Name == "On Land" || file.Name == "In Air" || file.Name == "In Water")
                     {
                         if (file.Name != "Text" && file.Name != "Images" && file.Name != "Videos")

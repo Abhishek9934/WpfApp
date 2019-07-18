@@ -66,8 +66,13 @@
                     <MenuItem Header="_Close" Click="Close_Clicked"/>
                 </MenuItem>
                 <MenuItem Header="_Edit">
-                    <MenuItem Header="_Add" Click="Edit_Content"/>
-                    <MenuItem Header="_Modify" Click="Edit_Content"/>
+                    <MenuItem Header="Plants" Click="Edit_Content"/>
+                    <MenuItem Header="Animals" Click="Edit_Content"/>
+                    <MenuItem Header="Microorganisms" Click="Edit_Content"/>
+                    <MenuItem Header="Fungi" Click="Edit_Content"/>
+                    <MenuItem Header="In Air" Click="Edit_Content"/>
+                    <MenuItem Header="On Land" Click="Edit_Content"/>
+                    <MenuItem Header="In Water" Click="Edit_Content"/>
                 </MenuItem>
                 <MenuItem Header="_View" Click ="list_Clicked">
                    

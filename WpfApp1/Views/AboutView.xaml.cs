@@ -58,7 +58,7 @@ namespace WpfApp1.Views
             List<Google.Apis.Drive.v3.Data.File> ls = FolderContent(folderID);
             foreach (Google.Apis.Drive.v3.Data.File x in ls)
             {
-                if (x.Name == "About")                                                        
+                if (x.Name == "Text")                                                        
                 {
                     List<Google.Apis.Drive.v3.Data.File> descList = FolderContent(x.Id);
                     if (descList.Count > 0) desc.Text = getText(descList[0].Id);

@@ -61,38 +61,6 @@ namespace WpfApp1
             });
         }
 
-        private List<string> filesListUtil(string filesList)
-        {
-            List<string> ans = new List<string>();
-            string word = "";
-            for (int i = 0; i < filesList.Length; i++)
-            {
-                if (filesList[i] == ' ')
-                {
-                    if (word.Length == 5)
-                    {
-                        if (Char.IsDigit(word[0]) && Char.IsDigit(word[1]) && word[2] == ':')
-                        {
-                            word = "";
-                            i++;
-                            while (filesList[i] != '\n')
-                            {
-                                word += filesList[i];
-                                i++;
-                            }
-                            ans.Add(word.Substring(0, word.Length - 1));
-                        }
-                    }
-                    word = "";
-                }
-                else
-                {
-                    word += filesList[i];
-                }
-            }
-            return ans;
-        }
-
         private void BlueView_Clicked(object sender, RoutedEventArgs e)
         {
             DataContext = new BlueView(getID((string)(sender as MenuItem).Header),service);
@@ -111,7 +79,8 @@ namespace WpfApp1
         private void Edit_Content(object sender, RoutedEventArgs e)
         {
             var wait = System.Windows.Forms.MessageBox.Show("Login to upload/edit");
-            System.Diagnostics.Process.Start("https://drive.google.com/drive/my-drive");                  //open the drive       
+            string str = getID((string)(sender as MenuItem).Header);
+            System.Diagnostics.Process.Start("https://drive.google.com/drive/folders/"+str);                  //open the drive       
         }
         private void Open_Content(object sender, RoutedEventArgs e){                  
             var wait = System.Windows.Forms.MessageBox.Show("Login to open file");
@@ -125,10 +94,10 @@ namespace WpfApp1
 
         private void MenuItem_Clicked(object sender, RoutedEventArgs e)
         {
-            if ((string)(sender as MenuItem).Tag == "unchecked")
+            if ((string)(sender as MenuItem).Tag == "unchecked" )
             {
                 string folderID = getID((string)(sender as System.Windows.Controls.MenuItem).Header);
-                Console.WriteLine(folderID);
+                //Console.WriteLine(folderID);
                 List<string> list1 = FolderContent(service,folderID);
                 list1.Sort();
                 for (int i = 0; i < list1.Count; i++)
@@ -138,8 +107,7 @@ namespace WpfApp1
                     (sender as MenuItem).Items.Add(menuItem);
 
                 }
-                (sender as MenuItem).Tag = "checked";
-                MenuItem_Clicked(sender, e);
+                 (sender as MenuItem).Tag = "checked";
             }
         }
 
@@ -148,7 +116,7 @@ namespace WpfApp1
             FilesResource.ListRequest listRequest = service.Files.List();
             listRequest.Fields = "nextPageToken, files(id, name, owners, parents,mimeType)";
             string temp = "name = \'" + str + "\'";
-            Console.WriteLine(temp);
+            //Console.WriteLine(temp);
             listRequest.Q = temp;
             var request = listRequest.Execute();
             return request.Files[0].Id;
@@ -168,8 +136,8 @@ namespace WpfApp1
             {
                 foreach (var file in request.Files)
                 {
-                    Console.WriteLine("{0}", file.Name);
-                    Console.WriteLine("{0}", file.Id);
+                    //Console.WriteLine("{0}", file.Name);
+                    //Console.WriteLine("{0}", file.Id);
                     ans.Add(file.Name);
                 }
             }
@@ -178,34 +146,6 @@ namespace WpfApp1
                 Console.WriteLine("No files found.");
             }
             return ans;
-        }
-
-
-        private void ListFiles(DriveService service)
-        {
-            // Define parameters of request.
-            FilesResource.ListRequest listRequest = service.Files.List();
-            listRequest.Fields = "nextPageToken, files(id, name, owners, parents,mimeType)";
-            //listRequest.Q = "mimeType='image/jpeg'";
-
-            // List files.
-            var request = listRequest.Execute();
-
-
-            if (request.Files != null && request.Files.Count > 0)
-            {
-                foreach (var file in request.Files)
-                {
-                    Console.WriteLine("{0}", file.Name);
-                }
-              
-            }
-            else
-            {
-                Console.WriteLine("No files found.");
-
-            }
-       
         }
 
         private static void UploadFile(string path, DriveService service, string mType)
@@ -223,7 +163,7 @@ namespace WpfApp1
 
             var file = request.ResponseBody;
 
-            Console.WriteLine("File ID: " + file.Id);
+            //Console.WriteLine("File ID: " + file.Id);
 
         }
 
@@ -259,43 +199,8 @@ namespace WpfApp1
             var request = service.Files.Create(fileMetadata);
             request.Fields = "id";
             var file = request.Execute();
-            Console.WriteLine("Folder ID: " + file.Id);
+            //Console.WriteLine("Folder ID: " + file.Id);
 
-        }
-
-        private static void DownloadFile(DriveService service,string fileID)
-        {
-            var request = service.Files.Get(fileID);
-           
-            var stream = new System.IO.MemoryStream();
-            request.MediaDownloader.ProgressChanged +=
-                (IDownloadProgress progress) =>
-                {
-                    switch (progress.Status)
-                    {
-                        case DownloadStatus.Downloading:
-                            {
-                                Console.WriteLine(progress.BytesDownloaded);
-                                break;
-                            }
-                        case DownloadStatus.Completed:
-                            {
-                                Console.WriteLine("Download complete.");
-                                break;
-                            }
-                        case DownloadStatus.Failed:
-                            {
-                                Console.WriteLine("Download failed.");
-                                break;
-                            }
-                    }
-                };
-            request.Download(stream);
-            using (FileStream file = new FileStream("F:/img.jpg", FileMode.Create, FileAccess.Write))
-            {
-                stream.WriteTo(file);
-                Console.WriteLine("File Downloaded successfully.");
-            }
         }
 
         private void Close_Clicked(object sender, RoutedEventArgs e)                    // close app
